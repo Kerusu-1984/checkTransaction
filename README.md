@@ -1,4 +1,4 @@
-環境変数にEthereumのRPCを設定
+ルートに.envファイルを作成、EthereumのRPCを設定する(.env.exampleを参考に)
 ```
 yarn
 yarn start
