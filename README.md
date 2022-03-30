@@ -1,6 +1,7 @@
-環境変数にRPCを設定
+環境変数にEthereumのRPCを設定
 ```
 yarn
 yarn start
 ```
-http://localhost:3000/にアクセス
+http://localhost:3000/
+にアクセス
