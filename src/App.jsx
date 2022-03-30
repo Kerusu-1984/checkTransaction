@@ -12,7 +12,7 @@ function App() {
   const switchRPC = () => {
     switch (chain) {
       case "eth": {
-        return process.env.ETH_RPC;
+        return process.env.REACT_APP_ETH_RPC;
       }
       case "polygon": {
         return "https://polygon-rpc.com";
