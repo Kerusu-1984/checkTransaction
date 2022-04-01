@@ -5,6 +5,7 @@ import { ERC20abi } from "./abi";
 import { useRecoilValue } from "recoil";
 import { selectedNetworkName } from "./recoil/atoms";
 import NetworkInput from "./components/NetworkInput";
+import { networkRPC } from "./config/network";
 
 function App() {
   const [hash, setHash] = useState("");
@@ -12,28 +13,8 @@ function App() {
   const [transaction, setTransaction] = useState(["", "", "", "", "", ""]);
   const abi = ERC20abi;
 
-  const switchRPC = () => {
-    switch (selectedNetwork) {
-      case "Ethereum": {
-        return process.env.REACT_APP_ETH_RPC;
-      }
-      case "Polygon": {
-        return "https://polygon-rpc.com";
-      }
-      case "Shiden": {
-        return "https://rpc.shiden.astar.network:8545";
-      }
-      case "Gnosis": {
-        return "https://rpc.gnosischain.com";
-      }
-      case "Avalanche": {
-        return "https://api.avax.network/ext/bc/C/rpc";
-      }
-    }
-  };
-
   const checkTransaction = async () => {
-    const rpc = switchRPC();
+    const rpc = networkRPC[selectedNetwork];
     const web3 = new Web3(new Web3.providers.HttpProvider(rpc));
     const txn = await web3.eth.getTransaction(hash);
     const sender = txn["from"];
@@ -47,7 +28,7 @@ function App() {
       "0x" + txn.input.slice(10)
     );
     const decimals = await token.methods.decimals().call();
-    var volume = Decimal(input.amount) / 10 ** decimals;
+    const volume = Decimal(input.amount) / 10 ** decimals;
     const name = await token.methods.name().call();
     const symbol = await token.methods.symbol().call();
     setTransaction([
