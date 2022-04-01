@@ -2,28 +2,31 @@ import { useState } from "react";
 import Web3 from "web3/dist/web3.min.js";
 import Decimal from "decimal.js";
 import { ERC20abi } from "./abi";
+import { useRecoilValue } from "recoil";
+import { selectedNetworkName } from "./recoil/atoms";
+import NetworkInput from "./components/NetworkInput";
 
 function App() {
   const [hash, setHash] = useState("");
-  const [chain, setChain] = useState("eth");
+  const selectedNetwork = useRecoilValue(selectedNetworkName);
   const [transaction, setTransaction] = useState(["", "", "", "", "", ""]);
   const abi = ERC20abi;
 
   const switchRPC = () => {
-    switch (chain) {
-      case "eth": {
+    switch (selectedNetwork) {
+      case "Ethereum": {
         return process.env.REACT_APP_ETH_RPC;
       }
-      case "polygon": {
+      case "Polygon": {
         return "https://polygon-rpc.com";
       }
-      case "shiden": {
+      case "Shiden": {
         return "https://rpc.shiden.astar.network:8545";
       }
-      case "gnosis": {
+      case "Gnosis": {
         return "https://rpc.gnosischain.com";
       }
-      case "avalanche": {
+      case "Avalanche": {
         return "https://api.avax.network/ext/bc/C/rpc";
       }
     }
@@ -47,7 +50,14 @@ function App() {
     var volume = Decimal(input.amount) / 10 ** decimals;
     const name = await token.methods.name().call();
     const symbol = await token.methods.symbol().call();
-    setTransaction([chain, sender, input.recipient, volume, name, symbol]);
+    setTransaction([
+      selectedNetwork,
+      sender,
+      input.recipient,
+      volume,
+      name,
+      symbol,
+    ]);
   };
 
   return (
@@ -62,56 +72,11 @@ function App() {
             setHash(e.target.value);
           }}
         />
-        <label>
-          <input
-            type="radio"
-            name="chain"
-            value="eth"
-            checked={chain === "eth"}
-            onChange={(e) => setChain(e.target.value)}
-          />
-          Ethereum
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="chain"
-            value="polygon"
-            checked={chain === "polygon"}
-            onChange={(e) => setChain(e.target.value)}
-          />
-          Polygon
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="chain"
-            value="shiden"
-            checked={chain === "shiden"}
-            onChange={(e) => setChain(e.target.value)}
-          />
-          Shiden
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="chain"
-            value="gnosis"
-            checked={chain === "gnosis"}
-            onChange={(e) => setChain(e.target.value)}
-          />
-          Gnosis
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="chain"
-            value="avalanche"
-            checked={chain === "avalanche"}
-            onChange={(e) => setChain(e.target.value)}
-          />
-          Avalanche
-        </label>
+        <NetworkInput network="Ethereum" />
+        <NetworkInput network="Polygon" />
+        <NetworkInput network="Shiden" />
+        <NetworkInput network="Gnosis" />
+        <NetworkInput network="Avalanche" />
         <button onClick={checkTransaction}>送信</button>
       </div>
       <h1>トランザクション確認</h1>
