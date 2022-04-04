@@ -6,17 +6,31 @@ import { useRecoilValue } from "recoil";
 import { selectedNetworkName } from "./recoil/atoms";
 import NetworkInput from "./components/NetworkInput";
 import { networkRPC } from "./config/network";
+import { useInput } from "./hooks/useInput";
 
 function App() {
-  const [hash, setHash] = useState("");
+  const isTransactionHash = (value) => /^0x[0-9A-Fa-f]{64}$/.test(value);
+  const {
+    value: hash,
+    setValue: setHash,
+    isValid: enteredHashIsValid,
+    validateHandler: hashValidateHandler,
+  } = useInput("", isTransactionHash);
   const selectedNetwork = useRecoilValue(selectedNetworkName);
   const [transaction, setTransaction] = useState(["", "", "", "", "", ""]);
   const abi = ERC20abi;
 
   const checkTransaction = async () => {
+    hashValidateHandler();
+    if (enteredHashIsValid === false) {
+      console.log("hashが正しくないよ");
+      return;
+    }
+
     const rpc = networkRPC[selectedNetwork];
     const web3 = new Web3(new Web3.providers.HttpProvider(rpc));
-    const txn = await web3.eth.getTransaction(hash);
+    const txn = (await web3.eth.getTransaction(hash)) ?? null;
+    if (txn === null) return;
     const sender = txn["from"];
     const receiver = txn["to"];
     const token = new web3.eth.Contract(abi, receiver);
@@ -59,6 +73,7 @@ function App() {
         <NetworkInput network="Gnosis" />
         <NetworkInput network="Avalanche" />
         <button onClick={checkTransaction}>送信</button>
+        {!enteredHashIsValid && <div>hashが正しくないよ</div>}
       </div>
       <h1>トランザクション確認</h1>
       <ul>
