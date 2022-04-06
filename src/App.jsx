@@ -25,6 +25,7 @@ function App() {
     const web3 = new Web3(new Web3.providers.HttpProvider(rpc));
     const txn = (await web3.eth.getTransaction(hash)) ?? null;
     if (txn === null) {
+      alert("トランザクションが存在しないよ！");
       setTxnDetail(["", "", "", "", "", ""]);
       return;
     }
