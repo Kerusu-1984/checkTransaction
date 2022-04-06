@@ -8,7 +8,9 @@ export const useInput = (defaultValue, isValid) => {
     setEnteredValue(value);
   };
   const validateHandler = () => {
-    setValueIsValid(isValid(enteredValue));
+    const enteredValueIsValid = isValid(enteredValue);
+    setValueIsValid(enteredValueIsValid);
+    return enteredValueIsValid;
   };
   return {
     value: enteredValue,
