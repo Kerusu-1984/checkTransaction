@@ -20,10 +20,6 @@ function App() {
   const [txnDetail, setTxnDetail] = useState(["", "", "", "", "", ""]);
 
   const checkTransaction = async () => {
-    if (hashValidateHandler() === false) {
-      setTxnDetail(["", "", "", "", "", ""]);
-      return;
-    }
     const abi = ERC20abi;
     const rpc = networkRPC[selectedNetwork];
     const web3 = new Web3(new Web3.providers.HttpProvider(rpc));
@@ -63,6 +59,14 @@ function App() {
     }
   };
 
+  const onClickHandler = () => {
+    if (hashValidateHandler() === false) {
+      setTxnDetail(["", "", "", "", "", ""]);
+      return;
+    }
+    checkTransaction();
+  };
+
   return (
     <>
       <h1>ERC20送信のトランザクションハッシュを入力してください</h1>
@@ -80,7 +84,7 @@ function App() {
         <NetworkInput network="Shiden" />
         <NetworkInput network="Gnosis" />
         <NetworkInput network="Avalanche" />
-        <button onClick={checkTransaction}>送信</button>
+        <button onClick={onClickHandler}>送信</button>
         {!enteredHashIsValid && <div>hashが正しくないよ</div>}
       </div>
       <h1>トランザクション確認</h1>
