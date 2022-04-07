@@ -1,11 +1,13 @@
 import { useRecoilState } from "recoil";
 import { selectedNetworkName } from "../recoil/atoms";
+import { networkRPC } from "../config/network";
 
-const NetworkInput = ({ network }) => {
+const NetworkInputs = () => {
   const [selectedNetwork, setSelectedNetwork] =
     useRecoilState(selectedNetworkName);
+  const networks = Object.keys(networkRPC);
 
-  return (
+  return networks.map((network) => (
     <label>
       <input
         type="radio"
@@ -13,10 +15,11 @@ const NetworkInput = ({ network }) => {
         value={network}
         checked={selectedNetwork === network}
         onChange={(e) => setSelectedNetwork(e.target.value)}
+        key={network}
       />
       {network}
     </label>
-  );
+  ));
 };
 
-export default NetworkInput;
+export default NetworkInputs;

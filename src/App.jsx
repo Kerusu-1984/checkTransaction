@@ -4,7 +4,7 @@ import Decimal from "decimal.js";
 import { ERC20abi } from "./abi";
 import { useRecoilValue } from "recoil";
 import { selectedNetworkName } from "./recoil/atoms";
-import NetworkInput from "./components/NetworkInput";
+import NetworkInputs from "./components/NetworkInputs";
 import { networkRPC } from "./config/network";
 import { useInput } from "./hooks/useInput";
 
@@ -80,11 +80,7 @@ function App() {
             setHash(e.target.value);
           }}
         />
-        <NetworkInput network="Ethereum" />
-        <NetworkInput network="Polygon" />
-        <NetworkInput network="Shiden" />
-        <NetworkInput network="Gnosis" />
-        <NetworkInput network="Avalanche" />
+        <NetworkInputs />
         <button onClick={onClickHandler}>送信</button>
         {!enteredHashIsValid && <div>hashが正しくないよ</div>}
       </div>
